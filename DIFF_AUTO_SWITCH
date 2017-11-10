@@ -1,0 +1,74 @@
+#!/bin/bash
+#### Smart And Solaris auto switch bash script written by CvA
+
+source ~/1bash
+BITCOIN="theGROUND"
+
+# Creating a log file to record coin switch 
+LOG_FILE="/home/m1/8_diffautoswitchlog"
+
+if [ -e "$LOG_FILE" ] ; then
+  #Limit the logfile, just keep the last 2K
+  LASTLOG=$(tail -n 1K $LOG_FILE)
+  echo "$LASTLOG"
+  echo ""
+fi
+
+while [ $BITCOIN == "theGROUND" ]
+do
+
+python2.7 SmartDifficulty.py
+python2.7 SolarisDifficulty.py
+sleep 5
+
+CURRENT_COIN=$(head -n 150 /home/m1/1bash | grep COIN= | sed 's/COIN=//' | sed 's/\"//' | sed 's/\"//')
+SMART_COIN=$(cat /home/m1/SmartDiff)
+SOLARIS_COIN=$(cat /home/m1/SolarisDiff)
+TIMEIN=$DIFF_AUTO_SWITCH_SYNC_INTERVAL
+TIMEOUT=$(($TIMEIN * 60))
+
+if [ "SMART_COIN" == "YES"]
+then
+if [ "$CURRENT_COIN" != "SMART" ]
+then
+sed -i 's/'COIN=\"$CURRENT_COIN\"'/'COIN=\"SMART\"/'' /home/m1/1bash
+sleep 1
+pkill -e screen
+pkill -f 3main
+echo ""
+echo "$(date) Mining switched from $CURRENT_COIN to SMART" | tee -a ${LOG_FILE}
+echo "Check again in $TIMEOUT seconds" #| tee -a ${LOG_FILE}
+sleep $TIMEOUT
+
+else
+echo ""
+echo "$(date) SMART still more profitable, Continue mining $CURRENT_COIN" | tee -a ${LOG_FILE}
+echo "Check again in $TIMEOUT seconds" #| tee -a ${LOG_FILE}
+sleep $TIMEOUT
+
+fi
+
+else
+
+if [ "$CURRENT_COIN" != "XLR" ]
+then
+sed -i 's/'COIN=\"$CURRENT_COIN\"'/'COIN=\"XLR\"/'' /home/m1/1bash
+sleep 1
+pkill -e screen
+pkill -f 3main
+echo ""
+echo "$(date) Mining switched from $CURRENT_COIN to SMART" | tee -a ${LOG_FILE}
+echo "Check again in $TIMEOUT seconds" #| tee -a ${LOG_FILE}
+sleep $TIMEOUT
+
+else
+
+echo ""
+echo "$(date) Solaris still more profitable, Continue mining $CURRENT_COIN" | tee -a ${LOG_FILE}
+echo "Check again in $TIMEOUT seconds" #| tee -a ${LOG_FILE}
+sleep $TIMEOUT
+
+fi
+
+fi
+done
