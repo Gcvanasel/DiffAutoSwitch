@@ -35,6 +35,13 @@ sed -i 's/'COIN=\"$CURRENT_COIN\"'/'COIN=\"SMART\"/'' /home/m1/1bash
 sleep 1
 pkill -e screen
 pkill -f 3main
+# Found these were the most stable for SMART
+nvidia-settings -c :0 -a '[gpu:0]/GPUMemoryTransferRateOffset[3]=-202'
+nvidia-settings -c :0 -a '[gpu:1]/GPUMemoryTransferRateOffset[3]=-202'
+nvidia-settings -c :0 -a '[gpu:2]/GPUMemoryTransferRateOffset[3]=-202'
+nvidia-settings -c :0 -a '[gpu:0]/GPUGraphicsClockOffset[3]=200'
+nvidia-settings -c :0 -a '[gpu:1]/GPUGraphicsClockOffset[3]=200'
+nvidia-settings -c :0 -a '[gpu:2]/GPUGraphicsClockOffset[3]=200'
 echo ""
 echo "$(date) Mining switched from $CURRENT_COIN to SMART" | tee -a ${LOG_FILE}
 echo "Check again in $TIMEOUT seconds" #| tee -a ${LOG_FILE}
@@ -56,6 +63,13 @@ sed -i 's/'COIN=\"$CURRENT_COIN\"'/'COIN=\"XLR\"/'' /home/m1/1bash
 sleep 1
 pkill -e screen
 pkill -f 3main
+# Found these were the most stable for Solaris
+nvidia-settings -c :0 -a '[gpu:0]/GPUMemoryTransferRateOffset[3]=-202'
+nvidia-settings -c :0 -a '[gpu:1]/GPUMemoryTransferRateOffset[3]=-202'
+nvidia-settings -c :0 -a '[gpu:2]/GPUMemoryTransferRateOffset[3]=-202'
+nvidia-settings -c :0 -a '[gpu:0]/GPUGraphicsClockOffset[3]=200'
+nvidia-settings -c :0 -a '[gpu:1]/GPUGraphicsClockOffset[3]=200'
+nvidia-settings -c :0 -a '[gpu:2]/GPUGraphicsClockOffset[3]=200'
 echo ""
 echo "$(date) Mining switched from $CURRENT_COIN to SMART" | tee -a ${LOG_FILE}
 echo "Check again in $TIMEOUT seconds" #| tee -a ${LOG_FILE}
